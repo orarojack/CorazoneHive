@@ -2,34 +2,23 @@
 import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { Minus, Plus, Trash2, ShoppingCart, ArrowLeft } from "lucide-react"
+import { Label } from "@/components/ui/label"
+import { Textarea } from "@/components/ui/textarea"
+import { Minus, Plus, Trash2, ShoppingCart, ArrowLeft, MapPin, Phone, User } from "lucide-react"
 import { useCart } from "@/lib/cart-context"
+import { useDelivery } from "@/lib/delivery-context"
+import Header from "@/components/header"
 
 export default function CartPage() {
   const { cart, updateQuantity, removeFromCart, getCartTotal, getCartCount } = useCart()
+  const { deliveryInfo, updateDeliveryInfo, isDeliveryInfoComplete } = useDelivery()
 
   if (cart.length === 0) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-purple-900">
-        <header className="glass-purple sticky top-0 z-50 border-b border-purple-300/20">
-          <div className="container mx-auto px-4 py-3">
-            <div className="flex items-center justify-between">
-              <Link href="/" className="flex items-center space-x-3">
-                <div className="w-10 h-10 purple-gradient rounded-xl flex items-center justify-center shadow-corazone">
-                  <span className="text-white font-bold text-lg">C</span>
-                </div>
-                <div>
-                  <h1 className="text-2xl font-bold text-white">
-                    CORA<span className="text-red-400">ZON</span>HIVES
-                  </h1>
-                  <p className="text-xs text-purple-200">Premium Sweet Delights</p>
-                </div>
-              </Link>
-            </div>
-          </div>
-        </header>
+        <Header currentPage="cart" />
 
         <div className="container mx-auto px-4 py-16 text-center">
           <div className="max-w-md mx-auto">
@@ -50,32 +39,7 @@ export default function CartPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-purple-900">
-      <header className="glass-purple sticky top-0 z-50 border-b border-purple-300/20">
-        <div className="container mx-auto px-4 py-3">
-          <div className="flex items-center justify-between">
-            <Link href="/" className="flex items-center space-x-3">
-              <div className="w-10 h-10 purple-gradient rounded-xl flex items-center justify-center shadow-corazone">
-                <span className="text-white font-bold text-lg">C</span>
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold text-white">
-                  CORA<span className="text-red-400">ZON</span>HIVES
-                </h1>
-                <p className="text-xs text-purple-200">Premium Sweet Delights</p>
-              </div>
-            </Link>
-            <nav className="hidden md:flex items-center space-x-6">
-              <Link href="/" className="text-white hover:text-purple-200 transition-colors">
-                Home
-              </Link>
-              <Link href="/products" className="text-white hover:text-purple-200 transition-colors">
-                Products
-              </Link>
-              <span className="text-red-400 font-semibold">Cart ({getCartCount()})</span>
-            </nav>
-          </div>
-        </div>
-      </header>
+      <Header currentPage="cart" />
 
       <div className="container mx-auto px-4 py-6">
         <div className="flex items-center mb-6">
@@ -88,10 +52,13 @@ export default function CartPage() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2">
+          {/* Cart Items */}
+          <div className="lg:col-span-2 space-y-6">
             <Card className="border-white/20 shadow-corazone glass-effect">
-              <CardContent className="p-6">
-                <h2 className="text-2xl font-bold text-white mb-6">Shopping Cart</h2>
+              <CardHeader>
+                <CardTitle className="text-2xl font-bold text-white">Shopping Cart</CardTitle>
+              </CardHeader>
+              <CardContent>
                 <div className="space-y-4">
                   {cart.map((item) => (
                     <div
@@ -155,36 +122,143 @@ export default function CartPage() {
                 </div>
               </CardContent>
             </Card>
+
+            {/* Delivery Information */}
+            <Card className="border-white/20 shadow-corazone glass-effect">
+              <CardHeader>
+                <CardTitle className="text-xl font-bold text-white flex items-center">
+                  <MapPin className="w-5 h-5 mr-2 text-purple-300" />
+                  Delivery Information
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="name" className="text-white font-medium">
+                      <User className="w-4 h-4 inline mr-2" />
+                      Full Name *
+                    </Label>
+                    <Input
+                      id="name"
+                      placeholder="Enter your full name"
+                      value={deliveryInfo.name}
+                      onChange={(e) => updateDeliveryInfo("name", e.target.value)}
+                      className="border-white/20 bg-white/10 text-white placeholder:text-purple-300"
+                      required
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="phone" className="text-white font-medium">
+                      <Phone className="w-4 h-4 inline mr-2" />
+                      Phone Number *
+                    </Label>
+                    <Input
+                      id="phone"
+                      placeholder="e.g., +254 700 123 456"
+                      value={deliveryInfo.phone}
+                      onChange={(e) => updateDeliveryInfo("phone", e.target.value)}
+                      className="border-white/20 bg-white/10 text-white placeholder:text-purple-300"
+                      required
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="area" className="text-white font-medium">
+                      <MapPin className="w-4 h-4 inline mr-2" />
+                      Delivery Area *
+                    </Label>
+                    <Input
+                      id="area"
+                      placeholder="e.g., Westlands, Kilimani, etc."
+                      value={deliveryInfo.area}
+                      onChange={(e) => updateDeliveryInfo("area", e.target.value)}
+                      className="border-white/20 bg-white/10 text-white placeholder:text-purple-300"
+                      required
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="address" className="text-white font-medium">
+                      <MapPin className="w-4 h-4 inline mr-2" />
+                      Detailed Address *
+                    </Label>
+                    <Textarea
+                      id="address"
+                      placeholder="Street, building, landmarks, etc."
+                      value={deliveryInfo.address}
+                      onChange={(e) => updateDeliveryInfo("address", e.target.value)}
+                      className="border-white/20 bg-white/10 text-white placeholder:text-purple-300 min-h-[80px]"
+                      required
+                    />
+                  </div>
+
+                  <div className="md:col-span-2 space-y-2">
+                    <Label htmlFor="notes" className="text-white font-medium">
+                      Additional Notes
+                    </Label>
+                    <Textarea
+                      id="notes"
+                      placeholder="Any special instructions, delivery preferences, or additional information..."
+                      value={deliveryInfo.notes}
+                      onChange={(e) => updateDeliveryInfo("notes", e.target.value)}
+                      className="border-white/20 bg-white/10 text-white placeholder:text-purple-300 min-h-[80px]"
+                    />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
 
+          {/* Order Summary */}
           <div>
             <Card className="border-white/20 shadow-corazone sticky top-4 glass-effect">
-              <CardContent className="p-6">
-                <h3 className="text-xl font-bold text-white mb-4">Order Summary</h3>
+              <CardHeader>
+                <CardTitle className="text-xl font-bold text-white">Order Summary</CardTitle>
+              </CardHeader>
+              <CardContent>
                 <div className="space-y-3 mb-6">
                   <div className="flex justify-between">
                     <span className="text-purple-200">Subtotal ({getCartCount()} items)</span>
                     <span className="font-semibold text-white">KSh {getCartTotal().toLocaleString()}</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-purple-200">Shipping</span>
-                    <span className="font-semibold text-white">Free</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-purple-200">Tax</span>
-                    <span className="font-semibold text-white">KSh {(getCartTotal() * 0.08).toLocaleString()}</span>
-                  </div>
                   <div className="border-t border-white/20 pt-3">
                     <div className="flex justify-between text-lg font-bold">
                       <span className="text-white">Total</span>
-                      <span className="text-red-400">KSh {(getCartTotal() * 1.08).toLocaleString()}</span>
+                      <span className="text-red-400">KSh {getCartTotal().toLocaleString()}</span>
                     </div>
                   </div>
                 </div>
+
+                {/* Delivery Info Summary */}
+                {deliveryInfo.name && deliveryInfo.area && (
+                  <div className="mb-6 p-4 border border-white/20 rounded-lg bg-white/5">
+                    <h4 className="font-semibold text-white mb-2">Delivery To:</h4>
+                    <div className="text-sm text-purple-200 space-y-1">
+                      <p><strong>Name:</strong> {deliveryInfo.name}</p>
+                      <p><strong>Phone:</strong> {deliveryInfo.phone}</p>
+                      <p><strong>Area:</strong> {deliveryInfo.area}</p>
+                      {deliveryInfo.address && <p><strong>Address:</strong> {deliveryInfo.address}</p>}
+                    </div>
+                  </div>
+                )}
+
                 <Link href="/checkout">
-                  <Button className="w-full purple-gradient text-white shadow-corazone">Proceed to Checkout</Button>
+                  <Button 
+                    className="w-full purple-gradient text-white shadow-corazone mb-3"
+                    disabled={!isDeliveryInfoComplete()}
+                  >
+                    <ShoppingCart className="w-4 h-4 mr-2" />
+                    Proceed to Checkout
+                  </Button>
                 </Link>
-                <p className="text-xs text-purple-300 text-center mt-3">Secure checkout powered by WhatsApp</p>
+                
+                <div className="text-center">
+                  <p className="text-xs text-purple-300 mb-2">Secure checkout powered by WhatsApp</p>
+                  <p className="text-xs text-purple-300">
+                    Delivery time: 30-60 minutes within Nairobi
+                  </p>
+                </div>
               </CardContent>
             </Card>
           </div>
@@ -193,3 +267,4 @@ export default function CartPage() {
     </div>
   )
 }
+

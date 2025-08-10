@@ -11,6 +11,7 @@ import { Star, ShoppingCart, Search, Filter, Heart } from "lucide-react"
 import { useCart } from "@/lib/cart-context"
 import Link from "next/link"
 import type { Product } from "@/lib/types"
+import Header from "@/components/header"
 
 interface ProductsPageClientProps {
   products: Product[]
@@ -57,41 +58,7 @@ export default function ProductsPageClient({ products, categories }: ProductsPag
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-purple-900">
       {/* Header */}
-      <header className="glass-purple sticky top-0 z-50 border-b border-purple-300/20">
-        <div className="container mx-auto px-4 py-3">
-          <div className="flex items-center justify-between">
-            <Link href="/" className="flex items-center space-x-3">
-              <div className="w-10 h-10 purple-gradient rounded-xl flex items-center justify-center shadow-corazone">
-                <span className="text-white font-bold text-lg">C</span>
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold text-white">
-                  CORA<span className="text-red-400">ZON</span>HIVES
-                </h1>
-                <p className="text-xs text-purple-200">Premium Sweet Delights</p>
-              </div>
-            </Link>
-            <nav className="hidden md:flex items-center space-x-6">
-              <Link href="/" className="text-white hover:text-purple-200 transition-colors font-medium">
-                Home
-              </Link>
-              <Link href="/products" className="text-red-400 font-bold">
-                Products
-              </Link>
-              <Link href="/cart">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="border-white/30 hover:bg-white/10 bg-white/5 backdrop-blur-sm text-white"
-                >
-                  <ShoppingCart className="w-4 h-4 mr-2" />
-                  Cart
-                </Button>
-              </Link>
-            </nav>
-          </div>
-        </div>
-      </header>
+      <Header currentPage="products" />
 
       <div className="container mx-auto px-4 py-6">
         {/* Page Header */}

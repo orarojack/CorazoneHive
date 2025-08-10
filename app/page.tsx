@@ -5,6 +5,8 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Star, ShoppingCart, Zap, Heart, Award, TrendingUp } from "lucide-react"
 import { getProducts, getCategories } from "@/lib/api/products"
+import Header from "@/components/header"
+import ProductCard from "@/components/product-card"
 
 export default async function HomePage() {
   const products = await getProducts()
@@ -23,41 +25,7 @@ export default async function HomePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-purple-900">
       {/* Header */}
-      <header className="glass-purple sticky top-0 z-50 border-b border-purple-300/20">
-        <div className="container mx-auto px-4 py-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 purple-gradient rounded-xl flex items-center justify-center shadow-corazone">
-                <span className="text-white font-bold text-lg">C</span>
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold text-white">
-                  CORA<span className="text-red-400">ZON</span>HIVES
-                </h1>
-                <p className="text-xs text-purple-200">You Have Tasted The Rest, Now Taste The Best</p>
-              </div>
-            </div>
-            <nav className="hidden md:flex items-center space-x-6">
-              <Link href="/" className="text-white hover:text-purple-200 transition-colors font-medium">
-                Home
-              </Link>
-              <Link href="/products" className="text-white hover:text-purple-200 transition-colors font-medium">
-                Products
-              </Link>
-              <Link href="/cart">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="border-white/30 hover:bg-white/10 bg-white/5 backdrop-blur-sm text-white hover:text-white"
-                >
-                  <ShoppingCart className="w-4 h-4 mr-2" />
-                  Cart
-                </Button>
-              </Link>
-            </nav>
-          </div>
-        </div>
-      </header>
+      <Header currentPage="home" />
 
       {/* Hero Section */}
       <section className="relative py-20 px-4 overflow-hidden">
@@ -175,54 +143,7 @@ export default async function HomePage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {flashSaleProducts.map((product) => (
-                <Card
-                  key={product.id}
-                  className="glass-effect hover:shadow-corazone-lg transition-all duration-500 hover:scale-105 border-white/30 group"
-                >
-                  <CardContent className="p-6">
-                    <div className="relative mb-6">
-                      <Image
-                        src={product.image || "/placeholder.svg"}
-                        alt={product.name}
-                        width={300}
-                        height={300}
-                        className="w-full h-48 object-cover rounded-xl"
-                      />
-                      <Badge className="absolute top-3 right-3 red-gradient text-white px-3 py-1 text-sm font-bold rounded-full shadow-lg animate-pulse">
-                        {product.discount}% OFF
-                      </Badge>
-                      <div className="absolute top-3 left-3 purple-gradient text-white px-2 py-1 rounded-full text-xs font-bold shadow-lg">
-                        FLASH SALE
-                      </div>
-                    </div>
-                    <h4 className="font-bold text-white mb-3 text-lg leading-tight">{product.name}</h4>
-                    <div className="flex items-center mb-4">
-                      <div className="flex items-center">
-                        {[...Array(5)].map((_, i) => (
-                          <Star
-                            key={i}
-                            className={`w-4 h-4 ${i < product.rating ? "text-white fill-current" : "text-gray-400"}`}
-                          />
-                        ))}
-                      </div>
-                      <span className="text-sm text-purple-200 ml-2">({product.reviews})</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <span className="text-xl font-bold text-white">KSh {product.salePrice?.toLocaleString()}</span>
-                        <span className="text-sm text-purple-300 line-through ml-2">
-                          KSh {product.price.toLocaleString()}
-                        </span>
-                      </div>
-                      <Button
-                        size="sm"
-                        className="purple-gradient hover:shadow-corazone text-white rounded-xl px-4 py-2 font-bold transition-all duration-300 transform hover:scale-105"
-                      >
-                        <ShoppingCart className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
+                <ProductCard key={product.id} product={product} variant="flash-sale" />
               ))}
             </div>
           </div>
@@ -241,53 +162,7 @@ export default async function HomePage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {popularProducts.map((product) => (
-              <Card
-                key={product.id}
-                className="hover:shadow-corazone-lg transition-all duration-500 hover:scale-105 border-white/20 hover:border-white/40 glass-effect group"
-              >
-                <CardContent className="p-6">
-                  <div className="relative mb-6">
-                    <Image
-                      src={product.image || "/placeholder.svg"}
-                      alt={product.name}
-                      width={300}
-                      height={300}
-                      className="w-full h-48 object-cover rounded-xl"
-                    />
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="absolute top-3 right-3 glass-effect hover:bg-white/20 rounded-full shadow-corazone"
-                    >
-                      <Heart className="w-4 h-4 text-red-400" />
-                    </Button>
-                    <div className="absolute top-3 left-3 purple-gradient text-white px-2 py-1 rounded-full text-xs font-bold shadow-lg">
-                      POPULAR
-                    </div>
-                  </div>
-                  <h4 className="font-bold text-white mb-3 text-lg leading-tight">{product.name}</h4>
-                  <div className="flex items-center mb-4">
-                    <div className="flex items-center">
-                      {[...Array(5)].map((_, i) => (
-                        <Star
-                          key={i}
-                          className={`w-4 h-4 ${i < product.rating ? "text-white fill-current" : "text-gray-400"}`}
-                        />
-                      ))}
-                    </div>
-                    <span className="text-sm text-purple-200 ml-2">({product.reviews})</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-xl font-bold text-white">KSh {product.price.toLocaleString()}</span>
-                    <Button
-                      size="sm"
-                      className="purple-gradient hover:shadow-corazone text-white rounded-xl px-4 py-2 font-bold transition-all duration-300 transform hover:scale-105"
-                    >
-                      <ShoppingCart className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
+              <ProductCard key={product.id} product={product} variant="popular" />
             ))}
           </div>
 
