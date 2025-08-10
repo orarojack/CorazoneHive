@@ -42,7 +42,7 @@ Subtotal: KSh ${subtotal.toLocaleString()}
 
 Please confirm this order and provide delivery fee information.`
 
-    const whatsappUrl = `https://wa.me/254700123456?text=${encodeURIComponent(message)}`
+    const whatsappUrl = `https://wa.me/254795541756?text=${encodeURIComponent(message)}`
     
     // Clear cart and delivery info after order placement
     clearCart()
